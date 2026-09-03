@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شجره‌نامه خانوادگی | Family Tree Builder</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Main Application Container -->
+    <div id="app-container">
+        
+        <!-- Top Navigation Bar -->
+        <header class="top-bar">
+            <div class="brand-section">
+                <div class="logo-container">
+                    <svg class="logo-icon" viewBox="0 0 100 100" width="50" height="50">
+                        <circle cx="50" cy="50" r="45" fill="#00A896" opacity="0.1"/>
+                        <path d="M50 15 L50 85 M20 35 L50 15 L80 35 M25 65 L50 85 L75 65" stroke="#00A896" stroke-width="3" fill="none"/>
+                        <circle cx="50" cy="25" r="8" fill="#D4AF37"/>
+                        <circle cx="30" cy="55" r="6" fill="#D4AF37"/>
+                        <circle cx="70" cy="55" r="6" fill="#D4AF37"/>
+                        <circle cx="50" cy="75" r="7" fill="#D4AF37"/>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1 class="brand-title" data-i18n="appTitle">شجره‌نامه خانوادگی</h1>
+                    <span class="brand-subtitle" data-i18n="appSubtitle">Family Tree Builder</span>
+                </div>
+            </div>
+            
+            <div class="toolbar-section">
+                <button class="tool-btn" id="btnNewTree" title="شجره جدید">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="2"/></svg>
+                    <span data-i18n="newTree">شجره جدید</span>
+                </button>
+                
+                <button class="tool-btn" id="btnOpenDirectory" title="انتخاب پوشه">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M2 6h8l2 2h10v12H2V6z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                    <span data-i18n="openFolder">پوشه پروژه</span>
+                </button>
+                
+                <button class="tool-btn" id="btnSaveNow" title="ذخیره آنی (Ctrl+S)">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" stroke="currentColor" stroke-width="2" fill="none"/><path d="M17 21v-8H7v8M7 3v5h8" stroke="currentColor" stroke-width="2"/></svg>
+                    <span data-i18n="saveNow">ذخیره آنی</span>
+                </button>
+                
+                <div class="tree-selector-container">
+                    <label data-i18n="currentTree">شجره فعلی:</label>
+                    <select id="treeSelector"></select>
+                </div>
+            </div>
+            
+            <div class="actions-section">
+                <button class="tool-btn primary" id="btnAddPerson" title="افزودن فرد جدید">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2" fill="none"/><path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="14" x2="12" y2="20" stroke="currentColor" stroke-width="2"/></svg>
+                    <span data-i18n="addPerson">افزودن فرد</span>
+                </button>
+                
+                <button class="tool-btn" id="btnAutoArrange" title="مرتب‌سازی هوشمند">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="6" r="2" fill="currentColor"/><circle cx="16" cy="12" r="2" fill="currentColor"/><circle cx="10" cy="18" r="2" fill="currentColor"/></svg>
+                    <span data-i18n="autoArrange">مرتب‌سازی</span>
+                </button>
+                
+                <button class="tool-btn" id="btnCalculateRelation" title="محاسبه نسبت خویشاوندی">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 3v18M8 7l4-4 4 4M8 17l4 4 4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                    <span data-i18n="calcRelation">نسبت‌سنجی</span>
+                </button>
+                
+                <button class="tool-btn" id="btnExport" title="خروجی گرفتن">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                    <span data-i18n="export">خروجی</span>
+                </button>
+                
+                <button class="tool-btn" id="btnToggleLang" title="تغییر زبان">
+                    <span class="lang-indicator">FA/EN</span>
+                </button>
+            </div>
+        </header>
+        
+        <!-- Secondary Toolbar -->
+        <div class="secondary-toolbar">
+            <div class="search-container">
+                <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" fill="none"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="2"/></svg>
+                <input type="text" id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="جستجو در شجره‌نامه...">
+                <div id="searchResults" class="search-results"></div>
+            </div>
+            
+            <div class="sort-controls">
+                <label data-i18n="sortBy">مرتب‌سازی بر اساس:</label>
+                <select id="sortCriteria">
+                    <option value="birthDate" data-i18n="sortByBirth">تاریخ تولد</option>
+                    <option value="firstName" data-i18n="sortByFirstName">نام</option>
+                    <option value="lastName" data-i18n="sortByLastName">نام خانوادگی</option>
+                    <option value="generation" data-i18n="sortByGeneration">نسل</option>
+                </select>
+                <button class="tool-btn small" id="btnSortOrder" title="ترتیب">
+                    <svg viewBox="0 0 24 24" width="16" height="16"><path d="M8 7l4-4 4 4M16 17l-4 4-4-4" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                </button>
+            </div>
+            
+            <div class="history-controls">
+                <button class="tool-btn small" id="btnUndo" title="بازگردانی (Ctrl+Z)" disabled>
+                    <svg viewBox="0 0 24 24" width="16" height="16"><path d="M9 14L4 9l5-5" stroke="currentColor" stroke-width="2" fill="none"/><path d="M20 20v-7a4 4 0 00-4-4H4" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                    <span id="undoCount">0</span>
+                </button>
+                <button class="tool-btn small" id="btnRedo" title="تکرار (Ctrl+Y)" disabled>
+                    <svg viewBox="0 0 24 24" width="16" height="16"><path d="M15 14l5-5-5-5" stroke="currentColor" stroke-width="2" fill="none"/><path d="M4 20v-7a4 4 0 014-4h12" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                    <span id="redoCount">0</span>
+                </button>
+            </div>
+            
+            <div class="zoom-controls">
+                <button class="tool-btn small" id="btnZoomOut" title="کوچک‌نمایی">
+                    <svg viewBox="0 0 24 24" width="16" height="16"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" fill="none"/><path d="M21 21l-4.35-4.35M8 11h6" stroke="currentColor" stroke-width="2"/></svg>
+                </button>
+                <span id="zoomLevel">100%</span>
+                <button class="tool-btn small" id="btnZoomIn" title="بزرگ‌نمایی">
+                    <svg viewBox="0 0 24 24" width="16" height="16"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2" fill="none"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6" stroke="currentColor" stroke-width="2"/></svg>
+                </button>
+                <button class="tool-btn small" id="btnZoomFit" title="تنظیم خودکار">
+                    <svg viewBox="0 0 24 24" width="16" height="16"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Canvas Area -->
+        <main class="canvas-container" id="canvasContainer">
+            <div class="canvas-wrapper" id="canvasWrapper">
+                <svg class="connections-layer" id="connectionsLayer"></svg>
+                <div class="nodes-layer" id="nodesLayer"></div>
+            </div>
+            
+            <!-- Radar Mini-Map -->
+            <div class="radar-minimap" id="radarMinimap">
+                <canvas id="minimapCanvas" width="200" height="150"></canvas>
+                <div class="minimap-viewport" id="minimapViewport"></div>
+            </div>
+            
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <div class="status-left">
+                    <span id="saveStatus" class="save-status">
+                        <span class="status-dot"></span>
+                        <span data-i18n="ready">آماده</span>
+                    </span>
+                    <span id="lastSaved" class="last-saved"></span>
+                </div>
+                <div class="status-center">
+                    <span id="nodeCount">0 <span data-i18n="nodes">فرد</span></span>
+                    <span class="separator">|</span>
+                    <span id="relationshipCount">0 <span data-i18n="relationships">رابطه</span></span>
+                </div>
+                <div class="status-right">
+                    <span id="coordinates">X: 0, Y: 0</span>
+                    <span class="separator">|</span>
+                    <span id="fpsCounter">60 FPS</span>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Person Edit Modal -->
+        <div class="modal-overlay" id="personModal">
+            <div class="modal-container modal-large">
+                <div class="modal-header">
+                    <h2 data-i18n="editPerson">ویرایش مشخصات فرد</h2>
+                    <button class="modal-close" id="closePersonModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="personForm" class="person-form">
+                        <input type="hidden" id="personId">
+                        
+                        <div class="form-grid">
+                            <!-- Photo Section -->
+                            <div class="photo-section">
+                                <div class="photo-preview" id="photoPreview">
+                                    <svg viewBox="0 0 100 100" width="120" height="120">
+                                        <circle cx="50" cy="50" r="48" fill="#F5EFEB" stroke="#D4AF37" stroke-width="2"/>
+                                        <circle cx="50" cy="40" r="18" fill="#D1C7BD"/>
+                                        <path d="M25 85c0-14 11-25 25-25s25 11 25 25" fill="#D1C7BD"/>
+                                    </svg>
+                                </div>
+                                <div class="photo-actions">
+                                    <input type="file" id="photoInput" accept="image/*" hidden>
+                                    <button type="button" class="btn-secondary" id="btnUploadPhoto" data-i18n="uploadPhoto">بارگذاری عکس</button>
+                                    <button type="button" class="btn-secondary" id="btnRemovePhoto" data-i18n="removePhoto">حذف عکس</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Basic Info -->
+                            <div class="info-section">
+                                <div class="form-row">
+                                    <label for="firstName" data-i18n="firstName">نام</label>
+                                    <input type="text" id="firstName" required>
+                                </div>
+                                <div class="form-row">
+                                    <label for="lastName" data-i18n="lastName">نام خانوادگی</label>
+                                    <input type="text" id="lastName">
+                                </div>
+                                <div class="form-row">
+                                    <label for="birthSurname" data-i18n="birthSurname">نام خانوادگی تولد</label>
+                                    <input type="text" id="birthSurname">
+                                </div>
+                                <div class="form-row">
+                                    <label for="title" data-i18n="title">عنوان / لقب</label>
+                                    <input type="text" id="title" placeholder="مثال: دکتر، مهندس، حاجی">
+                                </div>
+                            </div>
+                            
+                            <!-- Demographics -->
+                            <div class="info-section">
+                                <div class="form-row">
+                                    <label data-i18n="gender">جنسیت</label>
+                                    <div class="radio-group">
+                                        <label class="radio-label">
+                                            <input type="radio" name="gender" value="male" checked>
+                                            <span data-i18n="male">مرد</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="gender" value="female">
+                                            <span data-i18n="female">زن</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="gender" value="other">
+                                            <span data-i18n="other">سایر</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <label data-i18n="livingStatus">وضعیت حیات</label>
+                                    <div class="radio-group">
+                                        <label class="radio-label">
+                                            <input type="radio" name="livingStatus" value="living" checked>
+                                            <span data-i18n="living">زنده</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="livingStatus" value="deceased">
+                                            <span data-i18n="deceased">فوت شده</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Birth Information -->
+                            <div class="section-divider" data-i18n="birthInfo">اطلاعات تولد</div>
+                            <div class="date-section">
+                                <div class="form-row">
+                                    <label for="birthDateJalali" data-i18n="birthDateJalali">تاریخ تولد (شمسی)</label>
+                                    <input type="text" id="birthDateJalali" placeholder="1400/01/01">
+                                </div>
+                                <div class="form-row">
+                                    <label for="birthDateGregorian" data-i18n="birthDateGregorian">تاریخ تولد (میلادی)</label>
+                                    <input type="text" id="birthDateGregorian" placeholder="2021/03/21">
+                                </div>
+                                <div class="form-row full-width">
+                                    <label for="birthPlace" data-i18n="birthPlace">محل تولد</label>
+                                    <input type="text" id="birthPlace">
+                                </div>
+                            </div>
+                            
+                            <!-- Death Information -->
+                            <div class="section-divider" data-i18n="deathInfo">اطلاعات فوت</div>
+                            <div class="date-section">
+                                <div class="form-row">
+                                    <label for="deathDateJalali" data-i18n="deathDateJalali">تاریخ فوت (شمسی)</label>
+                                    <input type="text" id="deathDateJalali" placeholder="1400/01/01">
+                                </div>
+                                <div class="form-row">
+                                    <label for="deathDateGregorian" data-i18n="deathDateGregorian">تاریخ فوت (میلادی)</label>
+                                    <input type="text" id="deathDateGregorian" placeholder="2021/03/21">
+                                </div>
+                                <div class="form-row full-width">
+                                    <label for="restingPlace" data-i18n="restingPlace">آرامگاه / محل دفن</label>
+                                    <input type="text" id="restingPlace">
+                                </div>
+                            </div>
+                            
+                            <!-- Additional Info -->
+                            <div class="section-divider" data-i18n="additionalInfo">اطلاعات تکمیلی</div>
+                            <div class="info-section full-width">
+                                <div class="form-row full-width">
+                                    <label for="profession" data-i18n="profession">شغل / حرفه</label>
+                                    <input type="text" id="profession">
+                                </div>
+                                <div class="form-row full-width">
+                                    <label for="milestones" data-i18n="milestones">رویدادهای مهم زندگی</label>
+                                    <textarea id="milestones" rows="3"></textarea>
+                                </div>
+                                <div class="form-row full-width">
+                                    <label for="biography" data-i18n="biography">زندگینامه</label>
+                                    <textarea id="biography" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="cancelPersonEdit" data-i18n="cancel">انصراف</button>
+                    <button type="button" class="btn-primary" id="savePerson" data-i18n="saveChanges">ذخیره تغییرات</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Relationship Calculator Modal -->
+        <div class="modal-overlay" id="relationModal">
+            <div class="modal-container modal-medium">
+                <div class="modal-header">
+                    <h2 data-i18n="calcRelationTitle">محاسبه نسبت خویشاوندی</h2>
+                    <button class="modal-close" id="closeRelationModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="relation-selector">
+                        <div class="person-select-group">
+                            <label data-i18n="personA">فرد اول</label>
+                            <select id="personASelect"></select>
+                        </div>
+                        <div class="relation-arrow">
+                            <svg viewBox="0 0 24 24" width="30" height="30"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                        </div>
+                        <div class="person-select-group">
+                            <label data-i18n="personB">فرد دوم</label>
+                            <select id="personBSelect"></select>
+                        </div>
+                    </div>
+                    <button class="btn-primary full-width" id="btnCalculatePath" data-i18n="calculatePath">محاسبه مسیر</button>
+                    
+                    <div class="relation-result" id="relationResult">
+                        <div class="result-placeholder" data-i18n="selectPersons">دو فرد را انتخاب کنید تا نسبت خویشاوندی محاسبه شود</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Export Modal -->
+        <div class="modal-overlay" id="exportModal">
+            <div class="modal-container modal-small">
+                <div class="modal-header">
+                    <h2 data-i18n="exportTitle">خروجی گرفتن از شجره‌نامه</h2>
+                    <button class="modal-close" id="closeExportModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="export-options">
+                        <button class="export-option" id="exportJSON">
+                            <svg viewBox="0 0 24 24" width="40" height="40"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor" stroke-width="2" fill="none"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="2"/></svg>
+                            <span data-i18n="exportJSON">JSON</span>
+                        </button>
+                        <button class="export-option" id="exportPNG">
+                            <svg viewBox="0 0 24 24" width="40" height="40"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><path d="M21 15l-5-5L5 21h16z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                            <span data-i18n="exportPNG">PNG (4K)</span>
+                        </button>
+                        <button class="export-option" id="exportSVG">
+                            <svg viewBox="0 0 24 24" width="40" height="40"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                            <span data-i18n="exportSVG">SVG</span>
+                        </button>
+                        <button class="export-option" id="exportPrint">
+                            <svg viewBox="0 0 24 24" width="40" height="40"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2" stroke="currentColor" stroke-width="2" fill="none"/><rect x="6" y="14" width="12" height="8" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                            <span data-i18n="exportPrint">چاپ</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Context Menu -->
+        <div class="context-menu" id="contextMenu">
+            <div class="context-item" data-action="editPerson">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                <span data-i18n="editPerson">ویرایش فرد</span>
+            </div>
+            <div class="context-item" data-action="addParent">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2"/></svg>
+                <span data-i18n="addParent">افزودن والد</span>
+            </div>
+            <div class="context-item" data-action="addChild">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2"/></svg>
+                <span data-i18n="addChild">افزودن فرزند</span>
+            </div>
+            <div class="context-item" data-action="addSpouse">
+                <svg viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2" fill="none"/><path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                <span data-i18n="addSpouse">افزودن همسر</span>
+            </div>
+            <div class="context-divider"></div>
+            <div class="context-item" data-action="toggleCollapse">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke="currentColor" stroke-width="2"/></svg>
+                <span data-i18n="toggleBranch">بستن/بازکردن شاخه</span>
+            </div>
+            <div class="context-divider"></div>
+            <div class="context-item danger" data-action="deletePerson">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" stroke="currentColor" stroke-width="2"/></svg>
+                <span data-i18n="deletePerson">حذف فرد</span>
+            </div>
+        </div>
+        
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loader-persian">
+                <svg viewBox="0 0 100 100" width="80" height="80">
+                    <defs>
+                        <pattern id="girih" patternUnits="userSpaceOnUse" width="20" height="20">
+                            <path d="M0 10 L20 10 M10 0 L10 20" stroke="#D4AF37" stroke-width="1" opacity="0.5"/>
+                        </pattern>
+                    </defs>
+                    <circle cx="50" cy="50" r="45" fill="url(#girih)" stroke="#00A896" stroke-width="2"/>
+                    <circle cx="50" cy="50" r="30" stroke="#D4AF37" stroke-width="2" fill="none" stroke-dasharray="10 5">
+                        <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="3s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="50" cy="50" r="15" fill="#00A896" opacity="0.3"/>
+                </svg>
+                <p data-i18n="loading">در حال بارگذاری...</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>
